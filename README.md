@@ -2,9 +2,13 @@
 
 Personal IntelliJ plugins.
 
-## find-instance-creations
+## alex-mcguire-plugin
 
-Adds two actions, both finding usages of the Scala class under the caret restricted to instance
+One plugin, so there is only ever one thing to install. Everything below lives in it.
+
+### Find Instance Creations
+
+Two actions, both finding usages of the Scala class under the caret restricted to instance
 creation, and differing only in scope:
 
 | Action | Id | Scope |
@@ -51,19 +55,38 @@ nmap <leader>N <Action>(FindInstanceCreations)
 nmap <leader>P <Action>(FindProductionInstanceCreations)
 ```
 
+### Close Others and Pin
+
+Id `CloseOthersAndPin`, for switching focus to a new piece of work:
+closes every open editor tab except the focused one - pinned tabs included, and across every split -
+then pins the survivor.
+
+The built-in `CloseAllEditorsButActive` leaves pinned tabs open and does not pin anything, which is
+why this exists. Pinned files are unpinned first, since the pin is what protects a tab from being
+closed.
+
+It appears in `CloseEditorsGroup`, so it shows up both on the editor tab right-click menu and under
+Window -> Editor Tabs.
+
+```vim
+nmap <leader>o <Action>(CloseOthersAndPin)
+```
+
+That would replace the current `<leader>o` mapping to `CloseAllEditorsButActive`.
+
 ### Building
 
 Gradle 9.7.1 via the checked-in wrapper, toolchain Java 25 - IntelliJ 2026.2 ships class files at
 major version 69, so anything earlier cannot compile against it.
 
 ```
-./gradlew :find-instance-creations:runIde       # try it in a sandbox IDE
-./gradlew :find-instance-creations:buildPlugin  # zip in build/distributions, install from disk
+./gradlew :alex-mcguire-plugin:runIde       # try it in a sandbox IDE
+./gradlew :alex-mcguire-plugin:buildPlugin  # zip in build/distributions, install from disk
 ```
 
 ### Version pins to review on an IDE upgrade
 
-`build.gradle.kts` pins `intellijIdeaUltimate("262.10315.125")` and
+`alex-mcguire-plugin/build.gradle.kts` pins `intellijIdeaUltimate("262.10315.125")` and
 `plugin("org.intellij.scala", "2026.2.19")`. Pin the IDE by **build number**, not by `"2026.2"`: that
 resolves to the initial 2026.2 release, IU-262.8665.258, while Scala 2026.2.19 declares
 `since-build="262.10315"` and is refused as incompatible in the sandbox. The two pins have to move

@@ -1,3 +1,3 @@
 rootProject.name = "intellij-plugins"
 
-include("find-instance-creations")
+include("alex-mcguire-plugin")
