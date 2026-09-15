@@ -4,8 +4,13 @@ Personal IntelliJ plugins.
 
 ## find-instance-creations
 
-Adds one action, **Find Instance Creations** (id `FindInstanceCreations`), which finds usages of the
-Scala class under the caret restricted to instance creation, in production sources.
+Adds two actions, both finding usages of the Scala class under the caret restricted to instance
+creation, and differing only in scope:
+
+| Action | Id | Scope |
+| --- | --- | --- |
+| Find Instance Creations | `FindInstanceCreations` | whole project, tests included |
+| Find Instance Creations in Production | `FindProductionInstanceCreations` | production sources only |
 
 It exists because the equivalent built-in route cannot be automated. The Scala plugin's Find Usages
 settings dialog has an "Instance creation only" checkbox, but `ScalaTypeDefinitionUsagesDialog`
@@ -20,23 +25,30 @@ So the box has to be ticked by hand on every search, and no persisted setting ca
 
 ### What it searches
 
-The flag's only consumer is `ScalaFindUsagesHandlerBase.getPrimaryElements()`, which swaps the search
-elements for `clazz.constructors ++ applyFactoryMethods(clazz)`. The action sets the flag just long
-enough to collect those elements, restores it, and runs the search with its own options, so nothing
-leaks into a subsequent plain Find Usages. Matches:
+The action collects the search elements itself: the class's constructors plus every `apply` in its
+companion whose return type is the class. Matches:
 
 - `new Foo(...)` - all constructors.
 - `Foo(...)` on a case class, via the synthetic `apply`.
-- not `Foo(...)` where the companion has a hand-written `apply` - the plugin's filter keeps only
-  synthetic ones.
+- `Foo(...)` where the companion has a hand-written `apply` returning `Foo`.
 
-Scope is `GlobalSearchScopesCore.projectProductionScope`, set on the action's own options object, so
-the IDE-wide default Find Usages scope is left alone.
+That last case is deliberately wider than the Scala plugin's own "Instance creation only", whose
+`applyFactoryMethods` keeps only *synthetic* applies. In a codebase that rarely writes `new`, the
+built-in filter misses most instantiations.
+
+Both set the scope on their own options object - `GlobalSearchScope.projectScope` and
+`GlobalSearchScopesCore.projectProductionScope` - so the IDE-wide default Find Usages scope is left
+alone. Neither searches libraries; `GlobalSearchScope.allScope` would widen the unrestricted one if
+that is ever wanted.
+
+Both rows stay in the menu at all times and grey out when the caret is not on a Scala class, rather
+than disappearing.
 
 ### Binding it
 
 ```vim
 nmap <leader>N <Action>(FindInstanceCreations)
+nmap <leader>P <Action>(FindProductionInstanceCreations)
 ```
 
 ### Building
@@ -51,8 +63,12 @@ major version 69, so anything earlier cannot compile against it.
 
 ### Version pins to review on an IDE upgrade
 
-`build.gradle.kts` pins `intellijIdeaUltimate("2026.2")` and `plugin("org.intellij.scala", "2026.2.19")`,
-matching IU-262.10315.125 and Scala 2026.2.19.
+`build.gradle.kts` pins `intellijIdeaUltimate("262.10315.125")` and
+`plugin("org.intellij.scala", "2026.2.19")`. Pin the IDE by **build number**, not by `"2026.2"`: that
+resolves to the initial 2026.2 release, IU-262.8665.258, while Scala 2026.2.19 declares
+`since-build="262.10315"` and is refused as incompatible in the sandbox. The two pins have to move
+together. `local("/Applications/IntelliJ IDEA.app")` in place of `intellijIdeaUltimate(...)` is the
+no-download alternative, at the cost of a machine-specific path.
 
 `ScalaFindUsagesConfiguration`, `ScalaTypeDefinitionFindUsagesOptions` and the flag read inside
 `getPrimaryElements()` are Scala plugin internals with no compatibility promise. A break shows up as

@@ -18,8 +18,14 @@
         <action id="FindInstanceCreations"
                 class="cage433.intellij.instancecreations.FindInstanceCreationsAction"
                 text="Find Instance Creations"
+                description="Find usages of the class under the caret, restricted to instance creation">
+            <add-to-group group-id="FindUsagesMenuGroup" anchor="after" relative-to-action="ShowSettingsAndFindUsages"/>
+        </action>
+        <action id="FindProductionInstanceCreations"
+                class="cage433.intellij.instancecreations.FindProductionInstanceCreationsAction"
+                text="Find Instance Creations in Production"
                 description="Find production usages of the class under the caret, restricted to instance creation">
-            <add-to-group group-id="FindMenuGroup" anchor="after" relative-to-action="FindUsages"/>
+            <add-to-group group-id="FindUsagesMenuGroup" anchor="after" relative-to-action="FindInstanceCreations"/>
         </action>
     </actions>
 </idea-plugin>

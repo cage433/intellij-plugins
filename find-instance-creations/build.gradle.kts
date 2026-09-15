@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaUltimate("2026.2")
+        intellijIdeaUltimate("262.10315.125")
         bundledPlugin("com.intellij.java")
         plugin("org.intellij.scala", "2026.2.19")
     }

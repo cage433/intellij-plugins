@@ -1,13 +1,13 @@
 package cage433.intellij.instancecreations;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopesCore;
 import com.intellij.psi.search.SearchScope;
 
-public class FindInstanceCreationsAction extends InstanceCreationsAction {
+public class FindProductionInstanceCreationsAction extends InstanceCreationsAction {
 
     @Override
     protected SearchScope searchScope(Project project) {
-        return GlobalSearchScope.projectScope(project);
+        return GlobalSearchScopesCore.projectProductionScope(project);
     }
 }
