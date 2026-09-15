@@ -1,0 +1,25 @@
+<idea-plugin>
+    <id>cage433.find-instance-creations</id>
+    <name>Find Instance Creations</name>
+    <vendor>cage433</vendor>
+
+    <description><![CDATA[
+        Finds usages of the Scala class under the caret restricted to instance creation - constructor
+        calls and a case class's generated <code>apply</code> - in production sources only.
+        Equivalent to the Scala plugin's "Instance creation only" checkbox plus a Production scope,
+        with no dialog, so it can be bound to a key.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+    <depends>org.intellij.scala</depends>
+
+    <actions>
+        <action id="FindInstanceCreations"
+                class="cage433.intellij.instancecreations.FindInstanceCreationsAction"
+                text="Find Instance Creations"
+                description="Find production usages of the class under the caret, restricted to instance creation">
+            <add-to-group group-id="FindMenuGroup" anchor="after" relative-to-action="FindUsages"/>
+        </action>
+    </actions>
+</idea-plugin>
