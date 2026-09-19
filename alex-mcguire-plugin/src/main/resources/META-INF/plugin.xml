@@ -1,31 +1,32 @@
 <idea-plugin>
-    <id>cage433.find-instance-creations</id>
-    <name>Find Instance Creations</name>
+    <id>cage433.alex-mcguire-plugin</id>
+    <name>Alex McGuire Plugin</name>
     <vendor>cage433</vendor>
 
     <description><![CDATA[
-        Finds usages of the Scala class under the caret restricted to instance creation - constructor
-        calls and a case class's generated <code>apply</code> - in production sources only.
-        Equivalent to the Scala plugin's "Instance creation only" checkbox plus a Production scope,
-        with no dialog, so it can be bound to a key.
+        Personal actions.
+        <ul>
+            <li><b>Find Instance Creations</b> - usages of the Scala class under the caret restricted
+            to instance creation: constructor calls and companion <code>apply</code> calls, synthetic
+            or hand-written. One variant searches the whole project, the other production only.</li>
+            <li><b>Close Others and Pin</b> - closes every open editor tab except the focused one,
+            pinned tabs included and across all splits, then pins what is left.</li>
+        </ul>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.java</depends>
-    <depends>org.intellij.scala</depends>
+    <depends optional="true" config-file="scala-actions.xml">org.intellij.scala</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <themeProvider id="cage433.gruvbox-alex" path="/themes/gruvbox-alex.theme.json"/>
+    </extensions>
 
     <actions>
-        <action id="FindInstanceCreations"
-                class="cage433.intellij.instancecreations.FindInstanceCreationsAction"
-                text="Find Instance Creations"
-                description="Find usages of the class under the caret, restricted to instance creation">
-            <add-to-group group-id="FindUsagesMenuGroup" anchor="after" relative-to-action="ShowSettingsAndFindUsages"/>
-        </action>
-        <action id="FindProductionInstanceCreations"
-                class="cage433.intellij.instancecreations.FindProductionInstanceCreationsAction"
-                text="Find Instance Creations in Production"
-                description="Find production usages of the class under the caret, restricted to instance creation">
-            <add-to-group group-id="FindUsagesMenuGroup" anchor="after" relative-to-action="FindInstanceCreations"/>
+        <action id="CloseOthersAndPin"
+                class="cage433.intellij.closeothers.CloseOthersAndPinAction"
+                text="Close Others and Pin"
+                description="Close every editor tab except the focused one, pinned included, and pin that one">
+            <add-to-group group-id="CloseEditorsGroup" anchor="after" relative-to-action="CloseAllEditorsButActive"/>
         </action>
     </actions>
 </idea-plugin>
