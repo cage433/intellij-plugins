@@ -45,11 +45,11 @@
       "disabledForeground": "bg4",
       "inactiveForeground": "bg4",
       "disabledBackground": "bg",
-      "lightSelectionBackground": "bg2",
-      "selectionBackground": "#4F4945",
+      "lightSelectionBackground": "bg3",
+      "selectionBackground": "bg3",
       "selectionForeground": "fg0",
-      "selectionBackgroundInactive": "bg3",
-      "selectionInactiveBackground": "bg3",
+      "selectionBackgroundInactive": "bg1",
+      "selectionInactiveBackground": "bg1",
       "selectedBackground": "bg0_hh",
       "selectedForeground": "fg0",
       "selectedInactiveBackground": "bg0_s",
@@ -97,11 +97,29 @@
         "modifyingValueForeground": "blue1"
       }
     },
+    "DefaultTabs": {
+      "underlineColor": "blue1",
+      "inactiveUnderlineColor": "#4a5450"
+    },
     "EditorTabs": {
       "selectedBackground": "bg0_s",
-      "underlinedTabBackground": "bg2",
+      "underlinedTabBackground": "bg3",
       "underlineColor": "blue1",
+      "inactiveUnderlineColor": "#4a5450",
       "inactiveMaskColor": "#28282866"
+    },
+    "MainWindow": {
+      "Tab": {
+        "background": "bg",
+        "foreground": "fg4",
+        "selectedBackground": "bg3",
+        "selectedForeground": "fg0",
+        "selectedInactiveBackground": "bg2",
+        "hoverBackground": "bg1",
+        "hoverForeground": "fg1",
+        "borderColor": "bg2",
+        "separatorColor": "bg2"
+      }
     },
     "MainToolbar": {
       "background": "bg",
@@ -128,7 +146,7 @@
       "stripeColor": "bg0_s",
       "lightSelectionForeground": "fg0",
       "lightSelectionInactiveForeground": "fg4",
-      "lightSelectionBackground": "bg2",
+      "lightSelectionBackground": "bg3",
       "lightSelectionInactiveBackground": "bg"
     },
     "VersionControl": {
@@ -190,7 +208,7 @@
     },
     "CompletionPopup": {
       "background": "bg",
-      "selectionBackground": "bg1",
+      "selectionBackground": "bg3",
       "selectionInactiveBackground": "bg1",
       "matchForeground": "aqua1",
       "nonFocusedMask": "#00000000",
