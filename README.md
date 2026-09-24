@@ -86,6 +86,40 @@ would put such a suffix back.
 being picked up is the kind of thing to check after an IDE upgrade. The failure is cosmetic: the
 platform's own title comes back.
 
+### Project tab order
+
+The macOS project tabs are kept in a fixed order: everything that is not a
+topaz worktree first and alphabetical, then `topaz-main`, then the development worktrees
+`topaz-01 .. topaz-NN` numerically, then the PR review worktrees `topaz-pr-NN`. A worktree is named
+by the directory above the project, since they are all projects called `topaz` at
+`~/tz/topaz-NN/topaz`.
+
+What the eye sees is IntelliJ's own tab bar - with the New UI on macOS, `MacWinTabsHandlerV2` draws
+a `WindowTabsComponent`, a `JBTabs` whose `TabInfo.getObject()` is the frame - so sorting it is
+`sortTabs(Comparator<TabInfo>)`, public API.
+
+Underneath, the windows are also a native macOS tab group made by `JdkEx.setTabbingMode`, and that
+is the order macOS's own Show Next Tab walks, so sorting only the visible bar leaves tab switching
+going its own way. The native half copies `WindowTabsComponent.moveTabToNewIndex`, which is what
+dragging a tab runs: on the AppKit main thread, take the window out of its `NSWindowTabGroup` with
+`removeWindow:` and put it back with `insertWindow:atIndex:`.
+
+Doing that any other way is not a detail. Calling `addTabbedWindow:ordered:` on the EDT for a window
+already in the group does not move it - AppKit goes through
+`-[NSWindowStackController insertWindow:atIndex:]` into full screen handling and SIGTRAPs the IDE.
+
+`WindowTabsComponent` keeps a private frame-to-index map used when tabs are later inserted or
+removed; `recalculateIndexes` refreshes it and is called reflectively. A failure there is worth a
+misplaced tab, nothing more, so it is swallowed.
+
+`SortTabsOnProjectChange` re-imposes the order whenever a project opens or closes, since a new
+project's tab is added at the end and a closing one leaves a gap. The action `SortProjectTabs` does
+the same on demand, which is what puts things back after dragging a tab about.
+
+None of the above is public, supported API, so it is worth a look after an IDE upgrade. A change in
+`WindowTabsComponent` would most likely leave the tabs unsorted; a change in the native sequence is
+the one that could crash the IDE, as it already did once.
+
 ### Close Others and Pin
 
 Id `CloseOthersAndPin`, for switching focus to a new piece of work:

@@ -11,6 +11,10 @@
             or hand-written. One variant searches the whole project, the other production only.</li>
             <li><b>Window title</b> - just the directory name that tells this project apart from
             the others open at the time, with no path and no file name.</li>
+            <li><b>Project tab order</b> - the macOS project tabs are kept in a fixed order as
+            projects open and close: non-topaz projects alphabetically, then topaz-main, the
+            numbered development worktrees and the PR worktrees. <b>Sort Project Tabs</b> imposes
+            it on demand.</li>
             <li><b>Close Others and Pin</b> - closes every open editor tab except the focused one,
             pinned tabs included and across all splits, then pins what is left.</li>
         </ul>
@@ -25,14 +29,21 @@
                             serviceImplementation="cage433.intellij.frametitle.ProjectOnlyFrameTitleBuilder"
                             overrides="true"/>
         <postStartupActivity implementation="cage433.intellij.frametitle.RetitleOtherWindows"/>
+        <postStartupActivity implementation="cage433.intellij.projecttabs.SortTabsOnProjectChange"/>
     </extensions>
 
     <applicationListeners>
         <listener class="cage433.intellij.frametitle.RetitleOtherWindows"
                   topic="com.intellij.openapi.project.ProjectCloseListener"/>
+        <listener class="cage433.intellij.projecttabs.SortTabsOnProjectChange"
+                  topic="com.intellij.openapi.project.ProjectCloseListener"/>
     </applicationListeners>
 
     <actions>
+        <action id="SortProjectTabs"
+                class="cage433.intellij.projecttabs.SortProjectTabsAction"
+                text="Sort Project Tabs"
+                description="Lay the project tabs out with non-topaz projects first, then topaz-main, the development worktrees and the PR worktrees"/>
         <action id="CloseOthersAndPin"
                 class="cage433.intellij.closeothers.CloseOthersAndPinAction"
                 text="Close Others and Pin"
