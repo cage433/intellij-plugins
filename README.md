@@ -55,6 +55,30 @@ nmap <leader>N <Action>(FindInstanceCreations)
 nmap <leader>P <Action>(FindProductionInstanceCreations)
 ```
 
+### Window title
+
+The platform titles a window `topaz [~/tz/topaz-01/topaz] - RiskPriceCalcs.scala [topaz.valuation.main]`.
+With a dozen sbt worktrees open, all of them projects named `topaz` under `~/tz/topaz-NN/topaz`, the
+one part that identifies the window is buried in the middle. This replaces the title with
+`topaz-01` and nothing else.
+
+Both halves come from `FrameTitleBuilder`, an application service, so the whole format is replaced
+by overriding it:
+
+- the file half returns the empty string, and `ProjectFrameHelper` drops blank parts rather than
+  leaving a dangling separator;
+- the project half walks up the project's path and returns the first directory name that no other
+  open project shares. `~/tz/topaz-01/topaz` beside its siblings gives `topaz-01`; a project whose
+  own directory name is already unique, like `~/repos/intellij-plugins`, gives `intellij-plugins`.
+
+So the name only lengthens when it has to: with a single topaz worktree open the title reads
+`topaz`, and it becomes `topaz-01` once a second one is opened and that window's title next
+refreshes - on opening a file or switching editor tabs.
+
+`FrameTitleBuilder` is `@ApiStatus.Experimental`, and an override that stops compiling or stops
+being picked up is the kind of thing to check after an IDE upgrade. The failure is cosmetic: the
+platform's own title comes back.
+
 ### Close Others and Pin
 
 Id `CloseOthersAndPin`, for switching focus to a new piece of work:

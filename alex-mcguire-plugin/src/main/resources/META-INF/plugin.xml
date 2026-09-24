@@ -9,6 +9,8 @@
             <li><b>Find Instance Creations</b> - usages of the Scala class under the caret restricted
             to instance creation: constructor calls and companion <code>apply</code> calls, synthetic
             or hand-written. One variant searches the whole project, the other production only.</li>
+            <li><b>Window title</b> - just the directory name that tells this project apart from
+            the others open at the time, with no path and no file name.</li>
             <li><b>Close Others and Pin</b> - closes every open editor tab except the focused one,
             pinned tabs included and across all splits, then pins what is left.</li>
         </ul>
@@ -19,6 +21,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <themeProvider id="cage433.gruvbox-alex" path="/themes/gruvbox-alex.theme.json"/>
+        <applicationService serviceInterface="com.intellij.openapi.wm.impl.FrameTitleBuilder"
+                            serviceImplementation="cage433.intellij.frametitle.ProjectOnlyFrameTitleBuilder"
+                            overrides="true"/>
     </extensions>
 
     <actions>
