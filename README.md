@@ -72,8 +72,15 @@ by overriding it:
   own directory name is already unique, like `~/repos/intellij-plugins`, gives `intellij-plugins`.
 
 So the name only lengthens when it has to: with a single topaz worktree open the title reads
-`topaz`, and it becomes `topaz-01` once a second one is opened and that window's title next
-refreshes - on opening a file or switching editor tabs.
+`topaz`, and it becomes `topaz-01` once a second one is opened.
+
+A window only works its title out when it has reason to redraw it, so the windows already open when
+the set of projects changes would otherwise keep a title computed against the old set - the first
+worktree stays `topaz` while its siblings arrive. `RetitleOtherWindows` retitles them, hooked to
+project open as a `postStartupActivity` and to project close as a `ProjectCloseListener`. It sets
+the frame title directly, which is public API but skips any `titleInfoProvider` suffix; none of the
+bundled providers are active in a normal run, and the next title update the platform does for itself
+would put such a suffix back.
 
 `FrameTitleBuilder` is `@ApiStatus.Experimental`, and an override that stops compiling or stops
 being picked up is the kind of thing to check after an IDE upgrade. The failure is cosmetic: the

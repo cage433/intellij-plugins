@@ -24,7 +24,13 @@
         <applicationService serviceInterface="com.intellij.openapi.wm.impl.FrameTitleBuilder"
                             serviceImplementation="cage433.intellij.frametitle.ProjectOnlyFrameTitleBuilder"
                             overrides="true"/>
+        <postStartupActivity implementation="cage433.intellij.frametitle.RetitleOtherWindows"/>
     </extensions>
+
+    <applicationListeners>
+        <listener class="cage433.intellij.frametitle.RetitleOtherWindows"
+                  topic="com.intellij.openapi.project.ProjectCloseListener"/>
+    </applicationListeners>
 
     <actions>
         <action id="CloseOthersAndPin"
